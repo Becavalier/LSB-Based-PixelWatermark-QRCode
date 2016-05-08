@@ -44,12 +44,12 @@ public class Main extends Frame {
 	 * Auhtor: YHSPY
 	 * Date: 20150610
 	 */
+	
 	private static final long serialVersionUID = 1L;
 	static boolean imageLoaded = false;
 	private String filePath = "";
 	private Label cs = null;
 	private Label ds = null;
-	private Label attr00 = null;
 	private JLabel jlImg = null;
 	private JLabel csImg = null;
 	private MenuBar menuBar;
@@ -67,9 +67,9 @@ public class Main extends Frame {
 	
 	public void launchMethod() {
 
-		startFunc = new Button("Add Data");
-		startFunc.setSize(250, 70);
-		startFunc.setLocation(20, 330);
+		startFunc = new Button("Add Watermark");
+		startFunc.setSize(250, 50);
+		startFunc.setLocation(20, 360);
 		startFunc.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -78,7 +78,7 @@ public class Main extends Frame {
 					public boolean imageUpdate(Image image, int flags, int x, int y, int width, int height) {
 						if ((flags & ALLBITS) != 0) {
 							imageLoaded = true;
-							System.out.println("Image Loading Finished!");
+							System.out.println("---- Image Loading Finished! ----");
 							return false;
 						}
 						return true;
@@ -129,14 +129,13 @@ public class Main extends Frame {
 				int h = image.getHeight(null);
 				int[] rgbs = new int[w * h];
 				image.getRGB(0, 0, w, h, rgbs, 0, w);
-				System.out.println(w);System.out.println(h);
+
 				int plusFlag = 0;
 				int rgbApp = 0;
 				int dataVol = 0;
 				for (y = 0; y < w - 100; y++) {
 					for (x = 0; x < h - 100; x++) {
 						if (y > 1 && x > 1) {
-							System.out.println(x);System.out.println(y);
 							if ((image.getRGB(x, y - 1) == 0xFF000000 && image.getRGB(x, y + 1) == 0xFFFFFFFF)) {
 								dataVol ++;
 								if(plusFlag >= delArr.length) continue; 
@@ -165,7 +164,7 @@ public class Main extends Frame {
 				startFunc.setLabel("Hidden Volume:" + dataVol/4 + "chars");
 		
 				File file = new File(imageURL.substring(0, imageURL.lastIndexOf("\\")) + "temp.png");
-				ImageIcon icon = new ImageIcon(imageURL.substring(0, imageURL.lastIndexOf("\\")) + "temp.png"); // 鍦ㄦ鐩存帴鍒涘缓瀵硅薄
+				ImageIcon icon = new ImageIcon(imageURL.substring(0, imageURL.lastIndexOf("\\")) + "temp.png"); // 在此直接创建对象
 				icon.setImage(icon.getImage().getScaledInstance(240, 240, Image.SCALE_DEFAULT));
 				csImg.setIcon(icon);
 				csImg.setVisible(true);
@@ -178,9 +177,9 @@ public class Main extends Frame {
 			}
 		});
 
-		getHiddenData = new Button("Get Data");
-		getHiddenData.setSize(250, 70);
-		getHiddenData.setLocation(290, 330);
+		getHiddenData = new Button("Get Watermark");
+		getHiddenData.setSize(250, 50);
+		getHiddenData.setLocation(290, 360);
 	
 		getHiddenData.addActionListener(new ActionListener() {
 			@Override
@@ -190,7 +189,7 @@ public class Main extends Frame {
 					public boolean imageUpdate(Image image, int flags, int x, int y, int width, int height) {
 						if ((flags & ALLBITS) != 0) {
 							imageLoaded = true;
-							System.out.println("Image Loading Finished!");
+							System.out.println("---- Image Loading Finished! ----");
 							return false;
 						}
 						return true;
@@ -268,23 +267,18 @@ public class Main extends Frame {
 				getHiddenTxt.setText(revStr);
 			}
 		});
-		hiddenData = new TextArea(10,10);
-		hiddenData.setLocation(20, 410);
+		hiddenData = new TextArea("", 10, 10, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		hiddenData.setLocation(20, 420);
 		hiddenData.setSize(520, 80);
 		
-		getHiddenTxt = new TextArea(10,10);
-		getHiddenTxt.setLocation(555, 80);
+		getHiddenTxt = new TextArea("", 10, 10, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		getHiddenTxt.setLocation(555, 100);
 		getHiddenTxt.setSize(190, 270);
 		
-		getContent = new TextArea(10,10);
-		getContent.setLocation(555, 370);
+		getContent = new TextArea("", 10, 10, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		getContent.setLocation(555, 380);
 		getContent.setSize(190, 120);
 		
-		attr00 = new Label();
-		attr00.setLocation(105, 350);
-		attr00.setSize(120, 20);
-		attr00.setText("Attribute:");
-
 		ds = new Label();
 		ds.setLocation(600, 350);
 		ds.setSize(120, 20);
@@ -298,13 +292,13 @@ public class Main extends Frame {
 		jlImg = new JLabel();
 		jlImg.setOpaque(true);
 		jlImg.setBackground(new Color(240, 240, 240));
-		jlImg.setLocation(20, 65);
+		jlImg.setLocation(20, 100);
 		jlImg.setSize(250, 250);
 
 		csImg = new JLabel();
 		csImg.setOpaque(true);
 		csImg.setBackground(new Color(240, 240, 240));
-		csImg.setLocation(290, 65);
+		csImg.setLocation(290, 100);
 		csImg.setSize(250, 250);
 	
 		menuBar = new MenuBar();
@@ -313,15 +307,16 @@ public class Main extends Frame {
 		openFromFile.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				FileDialog fd = new FileDialog(Main.this, "璇烽�夋嫨浜岀淮鐮佹枃浠�", FileDialog.LOAD);
+				FileDialog fd = new FileDialog(Main.this, "Here, please choose one QR barcode", FileDialog.LOAD);
 				fd.setVisible(true);
 				if (fd.getDirectory() == null || fd.getFile() == null) {
 					return;
 				} else {
 					filePath = fd.getDirectory() + fd.getFile();
 				}
-				ImageIcon icon = new ImageIcon(filePath); // 鍦ㄦ鐩存帴鍒涘缓瀵硅薄
-				icon.setImage(icon.getImage().getScaledInstance(230, 230, Image.SCALE_DEFAULT));
+				
+				ImageIcon icon = new ImageIcon(filePath);
+				icon.setImage(icon.getImage().getScaledInstance(250, 250, Image.SCALE_DEFAULT));
 				jlImg.setIcon(icon);
 				jlImg.setVisible(true);
 			}
@@ -335,14 +330,13 @@ public class Main extends Frame {
 		this.add(ds);
 		this.add(cs);
 		this.add(getHiddenData);
-		this.add(attr00);
 		this.add(jlImg);
 		this.add(csImg);
 		this.add(getContent);
-		this.setTitle("淇℃伅闅愬啓涓庢彁鍙栫郴缁� 10112049 浜庤埅");
+		this.setTitle("PixelWatermark-QRCode-YHSPY");
 		this.setResizable(false);
 		this.setLocation(50, 50);
-		this.setSize(760, 500);
+		this.setSize(760, 520);
 		this.setLayout(null);
 		this.setVisible(true);
 	
@@ -360,7 +354,7 @@ public class Main extends Frame {
         try {
             image = ImageIO.read(new File(imgPath));
             if (image == null) {
-                System.out.println("鍥剧墖涓嶅瓨鍦紒璇烽噸鏂伴�夋嫨锛�");
+                System.out.println("Something Wrong!");
             }
             LuminanceSource source = new BufferedImageLuminanceSource(image);
             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
